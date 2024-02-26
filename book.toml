@@ -1,0 +1,18 @@
+[book]
+authors = ["skycloudd"]
+language = "en"
+title = "Moonlight"
+edition = "2021"
+
+[output.html]
+default-theme = "rust"
+no-section-label = true
+site-url = "/"
+cname = "skycloudd.is-a.dev"
+
+[output.html.print]
+enable = false
+
+[output.html.fold]
+enable = true
+level = 1
