@@ -1,36 +1,47 @@
 name: Deploy
 on:
-  push:
-    branches:
-      - main
+    push:
+        branches:
+            - main
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pages: write
-      id-token: write
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Install latest mdbook
-        run: |
-          tag=$(curl 'https://api.github.com/repos/rust-lang/mdbook/releases/latest' | jq -r '.tag_name')
-          url="https://github.com/rust-lang/mdbook/releases/download/${tag}/mdbook-${tag}-x86_64-unknown-linux-gnu.tar.gz"
-          mkdir mdbook
-          curl -sSL $url | tar -xz --directory=./mdbook
-          echo `pwd`/mdbook >> $GITHUB_PATH
-      - name: Build Book
-        run: |
-          mdbook build
-      - name: Setup Pages
-        uses: actions/configure-pages@v2
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: 'book'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v1
+    deploy:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            pages: write
+            id-token: write
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+            - name: Install latest mdbook
+              run: |
+                  tag=$(curl 'https://api.github.com/repos/rust-lang/mdbook/releases/latest' | jq -r '.tag_name')
+                  url="https://github.com/rust-lang/mdbook/releases/download/${tag}/mdbook-${tag}-x86_64-unknown-linux-gnu.tar.gz"
+                  mkdir mdbook
+                  curl -sSL $url | tar -xz --directory=./mdbook
+                  echo `pwd`/mdbook >> $GITHUB_PATH
+            - name: Install mdbook-toc
+              run: |
+                  tag=$(curl 'https://api.github.com/repos/badboy/mdbook-toc/releases/latest' | jq -r '.tag_name')
+                  url="https://github.com/badboy/mdbook-toc/releases/download/${tag}/mdbook-toc-${tag}-x86_64-unknown-linux-gnu.tar.gz"
+                  mkdir mdbook-toc
+                  curl -sSL $url | tar -xz --directory=./mdbook-toc
+                  echo `pwd`/mdbook-toc >> $GITHUB_PATH
+            - name: Build Book
+              run: |
+                  mdbook build
+            - name: Discord file
+              run: |
+                  mkdir book/.well-known
+                  echo "dh=d3cdf9de62cae7fb63bc7fed0aa2d52495e5a22e" > book/.well-known/discord
+            - name: Setup Pages
+              uses: actions/configure-pages@v2
+            - name: Upload artifact
+              uses: actions/upload-pages-artifact@v1
+              with:
+                  path: "book"
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v1

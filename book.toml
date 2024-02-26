@@ -4,11 +4,21 @@ language = "en"
 title = "Moonlight"
 edition = "2021"
 
+[build]
+create-missing = false
+
+[preprocessor.toc]
+command = "mdbook-toc"
+renderer = ["html"]
+
 [output.html]
 default-theme = "rust"
+preferred-dark-theme = "rust"
+curly-quotes = true
 no-section-label = true
 site-url = "/"
 cname = "skycloudd.is-a.dev"
+additional-css = ["custom.css"]
 
 [output.html.print]
 enable = false
