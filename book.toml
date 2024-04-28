@@ -27,9 +27,6 @@ additional-css = [
     "./theme/catppuccin-admonish.css",
 ]
 
-[output.html.print]
-enable = false
-
 [output.html.fold]
 enable = true
 level = 1
